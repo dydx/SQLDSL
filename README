@@ -1,0 +1,91 @@
+= SQL DSL
+
+SQL DSL is a library for creating SQL statements using ruby code.
+
+by Jay[http://jayfields.blogspot.com] Fields[http://jayfields.blogspot.com]
+
+== Download and Installation
+
+You can download SQL DSL from here[http://rubyforge.org/projects/sqldsl] or install it with the following command.
+
+ $ gem install sqldsl
+
+== License
+ 	
+You may use, copy and redistribute this library under the same terms as Ruby itself (see http://www.ruby-lang.org/en/LICENSE.txt).
+
+== Examples
+
+See the tests for more examples
+
+=== Test Helper
+
+    require 'test/unit'
+    require File.dirname(__FILE__) + '/../lib/sqldsl'
+
+=== Insert Example
+
+    require File.dirname(__FILE__) + '/test_helper'
+    
+    class InsertAcceptanceTest < Test::Unit::TestCase
+      def test_insert_select
+        statement = Insert.into[:table1][:column1, :column2, :column3].values do
+          Select[1]
+        end
+        assert_equal 'insert into table1 (column1, column2, column3) select 1', statement.to_sql
+      end
+      
+      def test_insert_with_values
+        statement = Insert.into[:table1][:column1, :column2, :column3].values(10, 'book', :column4)
+        assert_equal "insert into table1 (column1, column2, column3) values (10, 'book', column4)", statement.to_sql
+      end
+    end
+
+=== Update Example
+
+    require File.dirname(__FILE__) + '/test_helper'
+    
+    class UpdateAcceptanceTest < Test::Unit::TestCase
+      def test_insert_select
+        statement = Update[:table1].set[:column1=>10, :column2=>'book'].where do
+          not_exists(Select[1].from[:table2])
+        end
+        assert_equal "update table1 set column1=10, column2='book' where not exists (select 1 from table2)", statement.to_sql
+      end
+    end
+
+=== Delete Example
+
+    require File.dirname(__FILE__) + '/test_helper'
+    
+    class DeleteAcceptanceTest < Test::Unit::TestCase
+      def test_insert_select
+        statement = Delete.from[:table1].where do
+          exists(Select[1].from[:table2])
+        end
+        assert_equal "delete from table1 where exists (select 1 from table2)", statement.to_sql
+      end
+    end
+
+=== Select Example
+
+    require File.dirname(__FILE__) + '/test_helper'
+    
+    class SelectAcceptanceTest < Test::Unit::TestCase
+      def test_simple_select
+        statement = Select[:column1, 'book', 10].from[:table1].where do
+          equal :column1, 99
+          equal :column2, 'star'
+        end
+        expected = "select column1, 'book', 10 from table1 where column1 = 99 and column2 = 'star'"
+        assert_equal expected, statement.to_sql
+      end
+      
+      def test_select_with_join
+        statement = Select[:column1, :column2].from[:table1, :table2].where do
+          equal :'table1.id', :'table2.table1_id'
+        end
+        expected = "select column1, column2 from table1, table2 where table1.id = table2.table1_id"
+        assert_equal expected, statement.to_sql
+      end
+    end
