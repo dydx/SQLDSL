@@ -1,0 +1,1 @@
+Dir['**/*_test.rb'].each { |testCase| require testCase }
