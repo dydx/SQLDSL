@@ -6,8 +6,22 @@ class Select < SqlStatement
     # 
     #    Select[1, :column1, 'book'].to_sql       #=> "select 1, column1, 'book'"
     def [](*columns)
-      self.new("select #{columns.collect{ |column| column.to_sql }.join(', ')}")
+      self.new("select #{create_columns_list(columns)}")
     end
+    
+    def create_columns_list(columns) #:nodoc:
+      columns.collect{ |column| column.to_sql }.join(', ')
+    end
+    
+    # call-seq: Select.distinct -> a_select
+    # 
+    # Returns a Select class that appends 'distinct' to the select clause
+    # 
+    #    Select.distinct[1, :column1, 'book'].to_sql       #=> "select distinct 1, column1, 'book'"
+    def distinct
+      DistinctSelect
+    end
+
   end
   
   # call-seq: select.from -> a_select

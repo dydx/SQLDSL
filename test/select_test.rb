@@ -35,4 +35,12 @@ class SelectTest < Test::Unit::TestCase
     assert_equal 'select foo order by bar, baz', Select[:foo].order_by(:bar, :baz).to_sql
   end
   
+  def test_distinct_select
+    assert_equal 'select distinct foo', Select.distinct[:foo].to_sql
+  end
+  
+  def test_column_aliasing
+    assert_equal 'select column1 as foo, column2 as bar', Select[:column1 => :foo, :column2 => :bar].to_sql
+  end
+  
 end 
