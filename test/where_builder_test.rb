@@ -47,4 +47,12 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal ' where not exists (select foo)', statement.to_sql
   end
+  
+  def test_is_not_null_where_criteria
+    statement = WhereBuilder.new do
+      not_null :something
+    end
+    assert_equal ' where something is not null', statement.to_sql
+  end
+  
 end

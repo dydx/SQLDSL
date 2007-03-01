@@ -30,4 +30,14 @@ class Select < SqlStatement
     self
   end
   
+  # call-seq: select.order_by -> a_select
+  # 
+  # Returns a Select instance with the order arguments, joined by ', ' appended to the SQL statement.
+  # 
+  #    Select[1].from[:table1].order_by(:column1, :column2).to_sql       #=> "select 1 from table1 order by column1, column2"
+  def order_by(*column)
+    @to_sql << " order by #{column.to_sql}"
+    self
+  end
+  
 end

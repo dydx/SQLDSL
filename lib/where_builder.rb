@@ -18,6 +18,15 @@ class WhereBuilder
   def equal(lval, rval)
     sql_parts << rval.to_sql_equal(lval)
   end
+  
+  # call-seq: where.not_null(arg1)
+  # 
+  # Appends a not null condition to the where SQL clause.
+  # 
+  #    WhereBuilder.new { not_null :column1 }.to_sql       #=> " where column1 is not null"
+  def not_null(column)
+    sql_parts << "#{column} is not null"
+  end
     
   # call-seq: where.exists(clause)
   # 

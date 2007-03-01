@@ -26,4 +26,13 @@ class SelectTest < Test::Unit::TestCase
     assert_equal 'select column from bar, foo',
                  Select[:column].from[:foo, :bar].to_sql
   end
+  
+  def test_order_by
+    assert_equal 'select foo order by bar', Select[:foo].order_by(:bar).to_sql
+  end
+  
+  def test_order_by_with_multiple_arguments
+    assert_equal 'select foo order by bar, baz', Select[:foo].order_by(:bar, :baz).to_sql
+  end
+  
 end 
