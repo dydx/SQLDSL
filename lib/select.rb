@@ -6,11 +6,7 @@ class Select < SqlStatement
     # 
     #    Select[1, :column1, 'book'].to_sql       #=> "select 1, column1, 'book'"
     def [](*columns)
-      self.new("select #{create_columns_list(columns)}")
-    end
-    
-    def create_columns_list(columns) #:nodoc:
-      columns.collect{ |column| column.to_sql }.join(', ')
+      self.new("select #{columns.to_sql}")
     end
     
     # call-seq: Select.distinct -> a_select
@@ -20,6 +16,15 @@ class Select < SqlStatement
     #    Select.distinct[1, :column1, 'book'].to_sql       #=> "select distinct 1, column1, 'book'"
     def distinct
       DistinctSelect
+    end
+    
+    # call-seq: Select[arg,...] -> a_select
+    # 
+    # Returns a Select instance with the SQL initialized to 'select *'
+    # 
+    #    Select.all.to_sql       #=> "select *"
+    def all
+      self.new("select *")
     end
 
   end
@@ -40,7 +45,7 @@ class Select < SqlStatement
   # 
   #    Select[1, :column1, 'book'].from[:table1, :table2].to_sql       #=> "select 1, column1, 'book' from table1, table2"
   def [](*table_names)
-    @to_sql += table_names.sort{ |x,y| x.to_s <=> y.to_s }.collect{ |table| table.to_s }.sort.join(', ')
+    @to_sql += table_names.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
     self
   end
   

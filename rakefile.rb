@@ -27,7 +27,7 @@ Gem::manage_gems
 specification = Gem::Specification.new do |s|
 	s.name   = "sqldsl"
   s.summary = "A DSL for creating SQL Statements"
-	s.version = "1.0.0"
+	s.version = "1.1.1"
 	s.author = 'Jay Fields'
 	s.description = "A DSL for creating SQL Statements"
 	s.email = 'sqldsl-developer@rubyforge.org'
@@ -44,6 +44,6 @@ specification = Gem::Specification.new do |s|
 end
 
 Rake::GemPackageTask.new(specification) do |package|
-	 package.need_zip = true
-	 package.need_tar = true
+	 package.need_zip = false
+	 package.need_tar = false
 end

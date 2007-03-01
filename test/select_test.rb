@@ -43,4 +43,12 @@ class SelectTest < Test::Unit::TestCase
     assert_equal 'select column1 as foo, column2 as bar', Select[:column1 => :foo, :column2 => :bar].to_sql
   end
   
+  def test_table_aliasing
+    assert_equal 'select * from table1 as foo, table2 as bar', Select.all.from[:table1 => :foo, :table2 => :bar].to_sql
+  end
+  
+  def test_select_all
+    assert_equal 'select *', Select.all.to_sql
+  end
+  
 end 

@@ -8,9 +8,9 @@ class Hash
   def to_sql
     result = []
     each_pair do |key, value|
-      result << :"#{key} as #{value}"
+      result << "#{key} as #{value}".to_sym
     end
-    result.sort{|x,y| x.to_s <=> y.to_s}.to_sql
+    result.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
   end
 
 end
