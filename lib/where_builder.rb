@@ -67,26 +67,3 @@ class WhereBuilder
   end
   
 end
-
-class ReceiveAny  #:nodoc:
-  attr_reader :identifier
-  
-  def initialize(identifier, builder)
-    @identifier = identifier.to_s
-    @builder = builder
-  end
-  
-  def <=(arg)
-    @builder.sql_parts << "#{self.identifier} <= #{arg.identifier}"
-  end
-  
-  def append_on_setter(lval, rval)
-    @builder.equal(lval.identifier.chomp("=").to_sym, rval.identifier.to_sym)
-  end
-  
-  def method_missing(sym, *args)
-    @identifier << ".#{sym.to_s}"
-    append_on_setter(self, args.first) if sym.to_s =~ /=$/
-    self
-  end
-end
