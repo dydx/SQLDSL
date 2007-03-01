@@ -8,7 +8,21 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal ' where foo.column1 = bar.column2', statement.to_sql
   end
-  
+
+  def test_less_then_equal_where_criteria
+    statement = WhereBuilder.new do
+      column1 <= column2
+    end
+    assert_equal " where column1 <= column2", statement.to_sql
+  end
+
+  def test_less_then_equal_with_table_aliasing_where_criteria
+    statement = WhereBuilder.new do
+      table1.column1 <= table2.column2
+    end
+    assert_equal " where table1.column1 <= table2.column2", statement.to_sql
+  end
+
   def test_single_equal_with_array_where_criteria
     statement = WhereBuilder.new do
       equal :'foo.column1', ['foo','bar']

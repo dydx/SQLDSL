@@ -58,8 +58,30 @@ class WhereBuilder
     " where #{sql_parts.join(' and ')}"
   end
   
-  def sql_parts  #:nodoc:
+  def sql_parts #:nodoc:
     @sql_parts ||= []
   end
   
+  def method_missing(sym, *args) #:nodoc:
+    ReceiveAny.new(sym, self)
+  end
+  
+end
+
+class ReceiveAny  #:nodoc:
+  attr_reader :identifier
+  
+  def initialize(identifier, builder)
+    @identifier = identifier.to_s
+    @builder = builder
+  end
+  
+  def <=(arg)
+    @builder.sql_parts << "#{self.identifier} <= #{arg.identifier}"
+  end
+  
+  def method_missing(sym, *args)
+    @identifier << ".#{sym.to_s}"
+    self
+  end
 end
