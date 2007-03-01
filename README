@@ -89,3 +89,6 @@ See the tests for more examples
         assert_equal expected, statement.to_sql
       end
     end
+
+=== Contributors
+Matt Deiters

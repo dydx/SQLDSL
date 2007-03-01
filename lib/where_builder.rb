@@ -58,8 +58,6 @@ class WhereBuilder
     " where #{sql_parts.join(' and ')}"
   end
   
-  protected
-  
   def sql_parts  #:nodoc:
     @sql_parts ||= []
   end

@@ -55,4 +55,13 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal ' where something is not null', statement.to_sql
   end
   
+  def test_is_not_in_where_criteria
+    statement = WhereBuilder.new do
+      :column1.is_not_in do
+        Select[:shipment_option_id]
+      end
+    end
+    assert_equal ' where column1 not in (select shipment_option_id)', statement.to_sql
+  end
+  
 end

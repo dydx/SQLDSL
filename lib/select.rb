@@ -26,7 +26,7 @@ class Select < SqlStatement
   # 
   #    Select[1, :column1, 'book'].from[:table1, :table2].to_sql       #=> "select 1, column1, 'book' from table1, table2"
   def [](*table_names)
-    @to_sql += table_names.collect{ |table| table.to_s }.sort.join(', ')
+    @to_sql += table_names.sort{ |x,y| x.to_s <=> y.to_s }.collect{ |table| table.to_s }.sort.join(', ')
     self
   end
   
