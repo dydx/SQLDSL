@@ -37,3 +37,6 @@ See the tests for more examples
 === Select Example
 
 <%= File.readlines("test/select_acceptance_test.rb").collect { |line| "    " + line } %>
+
+=== Contributors
+Matt Deiters
