@@ -30,6 +30,20 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal " where table1.Column1 = table2.Folumn2", statement.to_sql
   end
 
+  def test_equal_with_a_numeric
+    statement = WhereBuilder.new do
+      table1.Column1 = 1
+    end
+    assert_equal " where table1.Column1 = 1", statement.to_sql
+  end
+
+  def test_equal_with_a_string
+    statement = WhereBuilder.new do
+      table1.Column1 = "foo"
+    end
+    assert_equal " where table1.Column1 = 'foo'", statement.to_sql
+  end
+
   def test_single_equal_with_array_where_criteria
     statement = WhereBuilder.new do
       equal :'foo.column1', ['foo','bar']
