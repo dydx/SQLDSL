@@ -22,6 +22,13 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal " where table1.column1 <= table2.column2", statement.to_sql
   end
+  
+  def test_equal_with_table_aliasing_where_criteria
+    statement = WhereBuilder.new do
+      table1.Column1 = table2.Folumn2
+    end
+    assert_equal " where table1.Column1 = table2.Folumn2", statement.to_sql
+  end
 
   def test_single_equal_with_array_where_criteria
     statement = WhereBuilder.new do

@@ -80,8 +80,13 @@ class ReceiveAny  #:nodoc:
     @builder.sql_parts << "#{self.identifier} <= #{arg.identifier}"
   end
   
+  def append_on_setter(lval, rval)
+    @builder.equal(lval.identifier.chomp("=").to_sym, rval.identifier.to_sym)
+  end
+  
   def method_missing(sym, *args)
     @identifier << ".#{sym.to_s}"
+    append_on_setter(self, args.first) if sym.to_s =~ /=$/
     self
   end
 end
