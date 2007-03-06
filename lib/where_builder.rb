@@ -1,12 +1,14 @@
 class WhereBuilder
-
+  attr_reader :tables
+  
   # call-seq: WhereBuilder.new(&block) -> a_where_builder
   # 
   # Returns a new WhereBuilder.  At initialization time the block is instance evaled on the
   # new WhereBuilder instance.
   # 
   #    WhereBuilder.new { equal :column1, 10 }.to_sql       #=> " where column1 = 10"
-  def initialize(&block)
+  def initialize(tables, &block)
+    @tables = tables
     instance_eval(&block)
   end
   

@@ -6,6 +6,7 @@ class Update < SqlStatement
     # 
     #    Update[:table1].to_sql       #=> "update table1"
     def [](table)
+      @tables = table
       self.new("update #{table.to_sql}")
     end
   end

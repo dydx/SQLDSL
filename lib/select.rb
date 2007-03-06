@@ -45,6 +45,7 @@ class Select < SqlStatement
   # 
   #    Select[1, :column1, 'book'].from[:table1, :table2].to_sql       #=> "select 1, column1, 'book' from table1, table2"
   def [](*table_names)
+    @tables = table_names
     @to_sql += table_names.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
     self
   end

@@ -1,5 +1,5 @@
 class SqlStatement
-  attr_reader :to_sql
+  attr_reader :to_sql, :tables
 
   def initialize(sql)  #:nodoc:
     @to_sql = sql
@@ -13,7 +13,7 @@ class SqlStatement
   # 
   #    Select[1].where { equal :column1, 1 }.to_sql       #=> "select 1 where column1 = 1"
   def where(&block)
-    @to_sql += WhereBuilder.new(&block).to_sql
+    @to_sql += WhereBuilder.new(self.tables, &block).to_sql
     self
   end
 end

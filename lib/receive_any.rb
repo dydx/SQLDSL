@@ -19,6 +19,7 @@ class ReceiveAny  #:nodoc:
   end
   
   def method_missing(sym, *args)
+    raise "#{self.to_sql} is not specified as a table in your from statement" unless @builder.tables.include?(self.to_sql.to_sym)
     @to_sql << ".#{sym.to_s}".chomp("=")
     append_on_setter(self.to_sql, args.first) if sym.to_s =~ /=$/
     self

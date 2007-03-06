@@ -51,4 +51,8 @@ class SelectTest < Test::Unit::TestCase
     assert_equal 'select *', Select.all.to_sql
   end
   
+  def test_table_array
+    assert_equal [:table1, :table2], Select.all.from[:table1, :table2].instance_variable_get("@tables")
+  end
+  
 end 
