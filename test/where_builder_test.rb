@@ -99,4 +99,11 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal ' where column1 not in (select shipment_option_id)', statement.to_sql
   end
   
+  def test_columns_in_where_are_validated_against_tables
+    assert_raises StandardError do
+      Select.all.from[:table].where do
+        table.cat = 12
+      end
+    end
+  end
 end
