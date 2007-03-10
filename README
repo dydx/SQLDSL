@@ -21,6 +21,9 @@ See the tests for more examples
 === Test Helper
 
     require 'test/unit'
+    unless File.directory? File.dirname(__FILE__) + '/../vendor/mocha-0.4.0/'
+      raise "mocha 4.0 is required to run the test suite. create the 'vendor' directory as a sibling of test and 'gem unpack mocha' in 'vendor'"
+    end
     $:.unshift File.dirname(__FILE__) + '/../vendor/mocha-0.4.0/lib/'
     require File.dirname(__FILE__) + '/../vendor/mocha-0.4.0/lib/mocha'
     require File.dirname(__FILE__) + '/../lib/sqldsl'
@@ -132,6 +135,16 @@ See the tests for more examples
                       and column3 <= column4 and column1 > 0 and column2 >= 'bar' 
                       and column1 is not null and column1 in (1, 2) and column2 not in (3, 4)"
         assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
+      end
+      
+      def test_select_with_receive_any_objects_and_method_calls
+        statement = Select[:column1, 'book', 10].from[:table1, :table2].where do
+          column1.equal 0
+        end.or do
+          column1 > 100
+        end
+        expected = "select column1, 'book', 10 from table1, table2 where column1 = 0 or column1 > 100"
+        assert_equal expected, statement.to_sql
       end
       
       def test_columns_in_inner_where_are_validated_against_outer_tables

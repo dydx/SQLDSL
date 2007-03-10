@@ -61,6 +61,16 @@ class SelectAcceptanceTest < Test::Unit::TestCase
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
   end
   
+  def test_select_with_receive_any_objects_and_method_calls
+    statement = Select[:column1, 'book', 10].from[:table1, :table2].where do
+      column1.equal 0
+    end.or do
+      column1 > 100
+    end
+    expected = "select column1, 'book', 10 from table1, table2 where column1 = 0 or column1 > 100"
+    assert_equal expected, statement.to_sql
+  end
+  
   def test_columns_in_inner_where_are_validated_against_outer_tables
     statement = Select.all.from[:table].where do
       exists(Select.all.from[:inner_table].where do
