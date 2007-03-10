@@ -118,17 +118,34 @@ class WhereBuilderTest < Test::Unit::TestCase
   
   def test_is_not_in_where_criteria
     statement = WhereBuilder.new [] do
-      :column1.is_not_in do
-        Select[:shipment_option_id]
-      end
+      column1.not_in Select[:shipment_option_id]
     end
     assert_equal ' where column1 not in (select shipment_option_id)', statement.to_sql
+  end
+  
+  def test_columns_in_inner_where_are_validated_against_outer_tables
+    statement = Select.all.from[:table].where do
+      exists(Select.all.from[:inner_table].where do
+        table.column1 = inner_table.column1
+      end)
+    end
+    assert_equal 'select * from table where exists (select * from inner_table where table.column1 = inner_table.column1)', statement.to_sql
   end
   
   def test_columns_in_where_are_validated_against_tables
     assert_raises RuntimeError do
       Select.all.from[:table].where do
         not_table.cat = 12
+      end
+    end
+  end
+  
+  def test_columns_in_inner_where_are_validated_against_outer_and_inner_tables
+    assert_raises RuntimeError do
+      Select.all.from[:table].where do
+        exists(Select.all.from[:inner_table].where do
+          table.column1 = not_table.cat
+        end)
       end
     end
   end

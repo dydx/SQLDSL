@@ -1,6 +1,4 @@
 class String
-  include WhereValue
-  
   # call-seq: string.to_sql -> a_string
   # 
   # Returns a string with single quotes escaped.

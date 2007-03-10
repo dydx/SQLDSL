@@ -1,5 +1,4 @@
 class Symbol
-  include WhereValue
   # call-seq: symbol.to_sql -> a_string
   # 
   # Returns a string with single quotes escaped.

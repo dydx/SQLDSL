@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/receive_any.rb'
-require File.dirname(__FILE__) + '/where_value.rb'
 require File.dirname(__FILE__) + '/object.rb'
 require File.dirname(__FILE__) + '/symbol.rb'
 require File.dirname(__FILE__) + '/array.rb'

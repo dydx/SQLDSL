@@ -1,5 +1,4 @@
 class Numeric
-  include WhereValue
   # call-seq: numeric.to_sql -> a_numeric
   # 
   # Returns self

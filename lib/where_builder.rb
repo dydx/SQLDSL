@@ -8,7 +8,8 @@ class WhereBuilder
   # 
   #    WhereBuilder.new { equal :column1, 10 }.to_sql       #=> " where column1 = 10"
   def initialize(tables, &block)
-    @tables = tables
+    raise ArgumentError.new("no block given to where, check for parenthesis usage") unless block_given?
+    @tables = tables.concat(eval("respond_to?(:tables) ? tables : []", block.binding))
     instance_eval(&block)
   end
   

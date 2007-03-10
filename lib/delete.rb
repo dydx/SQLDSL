@@ -17,6 +17,7 @@ class Delete < SqlStatement
   #    Delete.from[:table1].to_sql       #=> "delete from table1"
   def [](table)
     @to_sql += table.to_sql
+    @tables = [table]
     self
   end
 end

@@ -1,5 +1,6 @@
 class SqlStatement
-  attr_reader :to_sql, :tables
+  attr_accessor :tables
+  attr_reader :to_sql
 
   def initialize(sql)  #:nodoc:
     @to_sql = sql

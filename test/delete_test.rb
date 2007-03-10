@@ -23,7 +23,7 @@ class DeleteTest < Test::Unit::TestCase
     assert_equal expected, statement.to_sql
   end
   
-  def test_if_where_is_called_with_no_block_gives_reminder_to_use_parents
+  def test_if_where_is_called_with_no_block_gives_reminder_to_use_parens
     assert_raise(ArgumentError) do
       statement = Delete.from[:potential_account_offers].where do
         exists Select[:'potential_account_offers.id'].from[:foo].where do

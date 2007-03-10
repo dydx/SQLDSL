@@ -30,6 +30,10 @@ class ReceiveAny  #:nodoc:
     @builder.sql_parts << "#{self.to_sql} <> #{arg.to_sql}"
   end
   
+  def not_in(arg)
+    @builder.sql_parts << "#{self.to_sql} not in (#{arg.to_sql})"
+  end
+  
   def append_on_setter(lval, rval)
     @builder.equal(lval.to_sym, rval)
   end
