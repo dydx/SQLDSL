@@ -14,6 +14,22 @@ class ReceiveAny  #:nodoc:
     @builder.sql_parts << "#{self.to_sql} >= #{arg.to_sql}"
   end
   
+  def <=>(arg)
+    self.not_equal(arg)
+  end
+  
+  def <(arg)
+    @builder.sql_parts << "#{self.to_sql} < #{arg.to_sql}"
+  end
+  
+  def >(arg)
+    @builder.sql_parts << "#{self.to_sql} > #{arg.to_sql}"
+  end
+  
+  def not_equal(arg)
+    @builder.sql_parts << "#{self.to_sql} <> #{arg.to_sql}"
+  end
+  
   def append_on_setter(lval, rval)
     @builder.equal(lval.to_sym, rval)
   end

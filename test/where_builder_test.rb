@@ -9,6 +9,32 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal ' where foo.column1 = bar.column2', statement.to_sql
   end
 
+  def test_not_equal_using_spaceship
+    statement = WhereBuilder.new [:table] do
+      table.column1 <=> column2
+    end
+    assert_equal " where table.column1 <> column2", statement.to_sql
+  end
+  
+  def test_not_equal_using_not_equal
+    statement = WhereBuilder.new [:table] do
+      table.column1.not_equal column2
+    end
+    assert_equal " where table.column1 <> column2", statement.to_sql
+  end
+  
+  def test_less_than
+    statement = WhereBuilder.new [:table] do
+      table.column1 < column2
+    end
+  end
+  
+  def test_greater_than
+    statement = WhereBuilder.new [:table] do
+      table.column1 > column2
+    end
+  end
+  
   def test_less_then_equal_where_criteria
     statement = WhereBuilder.new [] do
       column1 <= column2
