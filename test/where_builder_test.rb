@@ -4,9 +4,30 @@ class WhereBuilderTest < Test::Unit::TestCase
   
   def test_condition_calls_to_sql
     lval, rval = mock, mock
-    lval.expects(:to_sql)
-    rval.expects(:to_sql)
-    WhereBuilder.new([], &lambda {}).condition(lval, "", rval)
+    lval.expects(:to_sql).returns "lval"
+    rval.expects(:to_sql).returns "rval"
+    where = WhereBuilder.new([], &lambda {})
+    where.add_condition(lval, "op", rval)
+    assert_equal "lval op rval", where.send(:sql_parts).first
+  end
+  
+  def test_parenthesis_condition_calls_to_sql
+    lval, rval = mock, mock
+    lval.expects(:to_sql).returns "lval"
+    rval.expects(:to_sql).returns "rval"
+    where = WhereBuilder.new([], &lambda {})
+    where.add_parenthesis_condition(lval, "op", rval)
+    assert_equal "lval op (rval)", where.send(:sql_parts).first
+  end
+  
+  def test_method_missing_for_receive_any_creation
+    assert_equal ReceiveAny, WhereBuilder.new([], &lambda {}).missing_method.class
+  end
+  
+  def test_method_missing_when_method_call_is_likely_a_mistake
+    assert_raises NoMethodError do
+      WhereBuilder.new([], &lambda {}).missing_method(:with_args)
+    end
   end
   
   def test_equal
@@ -90,7 +111,7 @@ class WhereBuilderTest < Test::Unit::TestCase
   
   def test_is_not_null_where_criteria
     statement = WhereBuilder.new [] do
-      not_null :something
+      is_not_null Struct.new(:to_sql).new('something')
     end
     assert_equal ' where something is not null', statement.to_sql
   end

@@ -1,117 +1,161 @@
-def test_columns_in_inner_where_are_validated_against_outer_tables
-  statement = Select.all.from[:table].where do
-    exists(Select.all.from[:inner_table].where do
-      table.column1 = inner_table.column1
-    end)
-  end
-  assert_equal 'select * from table where exists (select * from inner_table where table.column1 = inner_table.column1)', statement.to_sql
-end
-
-def test_columns_in_where_are_validated_against_tables
-  assert_raises RuntimeError do
-    Select.all.from[:table].where do
-      not_table.cat = 12
-    end
-  end
-end
-
-def test_columns_in_inner_where_are_validated_against_outer_and_inner_tables
-  assert_raises RuntimeError do
-    Select.all.from[:table].where do
-      exists(Select.all.from[:inner_table].where do
-        table.column1 = not_table.cat
-      end)
-    end
-  end
-end
-
 require File.dirname(__FILE__) + '/test_helper'
 
 class ReceiveAnyTest < Test::Unit::TestCase
+
+  def test_method_calls_to_valid_table_names_are_okay
+    builder = stub(:tables => [:foo])
+    ReceiveAny.new(:foo, builder).column1
+  end
   
-  def test_single_equal_where_criteria
-    statement = WhereBuilder.new [] do
-      equal :column1, :column2
+  def test_method_calls_to_invalid_table_names_raise_Argument_Error
+    assert_raises ArgumentError do
+      builder = stub(:tables => [])
+      ReceiveAny.new(:foo, builder).column1
     end
-    assert_equal ' where column1 = column2', statement.to_sql
+  end
+  
+  def test_equal
+    builder = mock
+    builder.expects(:equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
+    end
+    ReceiveAny.new(:foo, builder).equal 1
+  end
+  
+  def test_equal_operator
+    builder = mock
+    builder.expects(:equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
+    end
+    builder.expects(:tables).returns [:foo]
+    ReceiveAny.new(:foo, builder).bar = 1
   end
   
   def test_not_equal
-    statement = WhereBuilder.new [] do
-      not_equal :column1, :column2
+    builder = mock
+    builder.expects(:not_equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 <> column2", statement.to_sql
+    ReceiveAny.new(:foo, builder).not_equal 1
   end
-
-  def test_is_in_array
-    statement = WhereBuilder.new [] do
-      is_in :column1, [1,2]
+  
+  def test_not_equal_operator
+    builder = mock
+    builder.expects(:equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 in (1, 2)", statement.to_sql
+    ReceiveAny.new(:foo, builder) <=> 1
   end
-
-  def test_is_not_in_where_criteria
-    statement = WhereBuilder.new [] do
-      is_not_in :column1, [1,2]
-    end
-    assert_equal ' where column1 not in (1, 2)', statement.to_sql
-  end
-
+  
   def test_less_than
-    statement = WhereBuilder.new [] do
-      less_than :column1, :column2
+    builder = mock
+    builder.expects(:less_than).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 < column2", statement.to_sql
+    ReceiveAny.new(:foo, builder).less_than 1
+  end
+  
+  def test_less_than_operator
+    builder = mock
+    builder.expects(:less_than).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
+    end
+    ReceiveAny.new(:foo, builder) < 1
   end
   
   def test_less_than_or_equal
-    statement = WhereBuilder.new [] do
-      less_than_or_equal :column1, :column2
+    builder = mock
+    builder.expects(:less_than_or_equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 <= column2", statement.to_sql
+    ReceiveAny.new(:foo, builder).less_than_or_equal 1
   end
-
-  def test_greater_than
-    statement = WhereBuilder.new [] do
-      greater_than :column1, :column2
+  
+  def test_less_than_or_equal_operator
+    builder = mock
+    builder.expects(:less_than_or_equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 > column2", statement.to_sql
+    ReceiveAny.new(:foo, builder) <= 1
+  end
+  
+  def test_greater_than
+    builder = mock
+    builder.expects(:greater_than).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
+    end
+    ReceiveAny.new(:foo, builder).greater_than 1
+  end
+  
+  def test_greater_than_operator
+    builder = mock
+    builder.expects(:greater_than).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
+    end
+    ReceiveAny.new(:foo, builder) > 1
   end
   
   def test_greater_than_or_equal
-    statement = WhereBuilder.new [] do
-      greater_than_or_equal :column1, :column2
+    builder = mock
+    builder.expects(:greater_than_or_equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    assert_equal " where column1 >= column2", statement.to_sql
+    ReceiveAny.new(:foo, builder).greater_than_or_equal 1
   end
   
-  def test_where_clause_is_built_with_multiple_conditions
-    statement = WhereBuilder.new [] do
-      equal :column1, :column2
-      equal :column3, :column5
+  def test_greater_than_or_equal_operator
+    builder = mock
+    builder.expects(:greater_than_or_equal).with do |lval, rval|
+      lval.class == ReceiveAny && rval == 1
     end
-    expected = " where column1 = column2 and column3 = column5"
-    assert_equal expected, statement.to_sql
+    ReceiveAny.new(:foo, builder) >= 1
   end
   
-  def test_exists_evaluates_sql_statement_argument
-    statement = WhereBuilder.new [] do
-      exists Struct.new(:to_sql).new('select foo')
+  def test_is_in
+    builder = mock
+    builder.expects(:is_in).with do |lval, rval|
+      lval.class == ReceiveAny && rval == [1,2]
     end
-    assert_equal ' where exists (select foo)', statement.to_sql
+    ReceiveAny.new(:foo, builder).is_in [1,2]
   end
-  
-  def test_not_exists_evaluates_sql_statement_argument
-    statement = WhereBuilder.new [] do
-      not_exists Struct.new(:to_sql).new('select foo')
+
+  def test_is_in_operator
+    builder = mock
+    builder.expects(:is_in).with do |lval, rval|
+      lval.class == ReceiveAny && rval == [1,2]
     end
-    assert_equal ' where not exists (select foo)', statement.to_sql
+    ReceiveAny.new(:foo, builder) >> [1,2]
   end
-  
-  def test_is_not_null_where_criteria
-    statement = WhereBuilder.new [] do
-      not_null :something
+
+  def test_is_not_in
+    builder = mock
+    builder.expects(:is_not_in).with do |lval, rval|
+      lval.class == ReceiveAny && rval == [1,2]
     end
-    assert_equal ' where something is not null', statement.to_sql
+    ReceiveAny.new(:foo, builder).is_not_in [1,2]
+  end
+
+  def test_is_not_in_operator
+    builder = mock
+    builder.expects(:is_not_in).with do |lval, rval|
+      lval.class == ReceiveAny && rval == [1,2]
+    end
+    ReceiveAny.new(:foo, builder) << [1,2]
+  end
+
+  def test_is_not_null
+    builder = mock
+    builder.expects(:is_not_null).with do |lval|
+      lval.class == ReceiveAny
+    end
+    ReceiveAny.new(:foo, builder).is_not_null
+  end
+
+  def test_is_not_null_operator
+    builder = mock
+    builder.expects(:is_not_in).with do |lval|
+      lval.class == ReceiveAny
+    end
+    ReceiveAny.new(:foo, builder) ^ nil
   end
 end
