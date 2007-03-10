@@ -19,7 +19,35 @@ class WhereBuilder
   # 
   #    WhereBuilder.new { equal :column1, 10 }.to_sql       #=> " where column1 = 10"
   def equal(lval, rval)
-    sql_parts << rval.to_sql_equal(lval)
+    sql_parts << "#{lval.to_sql} = #{rval.to_sql}"
+  end
+  
+  def not_equal(lval, rval)
+    sql_parts << "#{lval.to_sql} <> #{rval.to_sql}"
+  end
+  
+  def is_in(lval, rval)
+    sql_parts << "#{lval.to_sql} in (#{rval.to_sql})"
+  end
+  
+  def is_not_in(lval, rval)
+    sql_parts << "#{lval.to_sql} not in (#{rval.to_sql})"
+  end
+  
+  def less_than(lval, rval)
+    sql_parts << "#{lval.to_sql} < #{rval.to_sql}"
+  end
+  
+  def less_than_or_equal(lval, rval)
+    sql_parts << "#{lval.to_sql} <= #{rval.to_sql}"
+  end
+  
+  def greater_than(lval, rval)
+    sql_parts << "#{lval.to_sql} > #{rval.to_sql}"
+  end
+  
+  def greater_than_or_equal(lval, rval)
+    sql_parts << "#{lval.to_sql} >= #{rval.to_sql}"
   end
   
   # call-seq: where.not_null(arg1)
@@ -66,7 +94,11 @@ class WhereBuilder
   end
   
   def method_missing(sym, *args) #:nodoc:
+    super unless args.empty?
     ReceiveAny.new(sym, self)
   end
   
+  def condition(lval, operator, rval)
+    "#{lval.to_sql} #{operator} #{rval.to_sql}"
+  end
 end

@@ -1,1 +1,1 @@
-Dir['**/*_test.rb'].each { |testCase| require testCase }
+Dir['test/*_test.rb'].each { |test_case| require test_case }
