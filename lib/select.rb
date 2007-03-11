@@ -45,8 +45,11 @@ class Select < SqlStatement
   # 
   #    Select[1, :column1, 'book'].from[:table1, :table2].to_sql       #=> "select 1, column1, 'book' from table1, table2"
   def [](*table_names)
-    @tables = table_names
-    @to_sql += table_names.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
+    @tables = table_names.inject([]) { |result, element| result + (element.is_a?(Hash) ? element.values : [element]) }
+
+    @to_sql += table_names.inject([]) do |result, element|
+      result + (element.is_a?(Symbol) ? [element] : element.to_a.inject([]) { |result, pair| result << :"#{pair.first} #{pair.last}" })
+    end.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
     self
   end
   
