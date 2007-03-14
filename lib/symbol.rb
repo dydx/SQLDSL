@@ -6,6 +6,10 @@ class Symbol
   #    "it's".to_sql     #=> "'it''s'"
   def to_sql
     to_s
-  end  
+  end
+  
+  def as(alias_name)
+    "#{self} as #{alias_name}"
+  end
 
 end

@@ -7,9 +7,9 @@ class OrWhereBuilder < WhereBuilder
   #    OrWhereBuilder.new [] do 
   #      equal :column1, 10
   #      equal :column2, 'book'
-  #    end.to_sql         #=> " or column1 = 10 and column2 = 'book'"
+  #    end.to_sql         #=> " or (column1 = 10 and column2 = 'book')"
   def to_sql
-    " or #{sql_parts.join(' and ')}"
+    " or (#{sql_parts.join(' and ')})"
   end
 
 end

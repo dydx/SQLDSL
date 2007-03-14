@@ -7,4 +7,8 @@ class Numeric
   def to_sql
     self
   end
+  
+  def as(alias_name)
+    "#{self} as #{alias_name}"
+  end
 end

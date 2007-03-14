@@ -18,7 +18,7 @@ class Select < SqlStatement
       DistinctSelect
     end
     
-    # call-seq: Select[arg,...] -> a_select
+    # call-seq: Select.all -> a_select
     # 
     # Returns a Select instance with the SQL initialized to 'select *'
     # 
@@ -48,7 +48,7 @@ class Select < SqlStatement
     @tables = table_names.inject([]) { |result, element| result + (element.is_a?(Hash) ? element.values : [element]) }
 
     @to_sql += table_names.inject([]) do |result, element|
-      result + (element.is_a?(Symbol) ? [element] : element.to_a.inject([]) { |result, pair| result << :"#{pair.first} #{pair.last}" })
+      result + (element.is_a?(Symbol) ? [element] : element.to_a.inject([]) { |result, pair| result << "#{pair.first} #{pair.last}".to_sym })
     end.sort{ |x,y| x.to_s <=> y.to_s }.to_sql
     self
   end

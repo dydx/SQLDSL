@@ -7,5 +7,9 @@ class String
   def to_sql
     "'#{self.gsub(/'/, "''")}'"
   end
+  
+  def as(alias_name)
+    "#{self.to_sql} as #{alias_name}"
+  end
 
 end
