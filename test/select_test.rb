@@ -23,7 +23,7 @@ class SelectTest < Test::Unit::TestCase
   end
     
   def test_select_with_multiple_tables
-    assert_equal 'select column from bar, foo', Select[:column].from[:foo, :bar].to_sql
+    assert_equal 'select column from foo, bar', Select[:column].from[:foo, :bar].to_sql
   end
   
   def test_order_by
@@ -39,11 +39,11 @@ class SelectTest < Test::Unit::TestCase
   end
   
   def test_column_aliasing
-    assert_equal 'select column1 as foo, column2 as bar', Select[:column1 => :foo, :column2 => :bar].to_sql
+    assert_equal "select column1 as foo, 2 as bar, 'foo' as baz", Select[:column1.as(:foo), 2.as(:bar), 'foo'.as(:baz)].to_sql
   end
   
   def test_table_aliasing
-    assert_equal 'select * from table1 foo, table2 bar', Select.all.from[:table1 => :foo, :table2 => :bar].to_sql
+    assert_equal 'select * from table1 foo, table2 bar, table3', Select.all.from[:table1.as(:foo), :table2.as(:bar), :table3].to_sql
   end
   
   def test_tables_no_aliasing

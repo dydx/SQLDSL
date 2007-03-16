@@ -73,7 +73,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
   
   def test_columns_in_inner_where_are_validated_against_outer_tables
     statement = Select.all.from[:table].where do
-      exists(Select.all.from[:inner_table => :aliased].where do
+      exists(Select.all.from[:inner_table.as(:aliased)].where do
         table.column1 = aliased.column1
       end)
     end

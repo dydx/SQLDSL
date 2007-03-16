@@ -9,7 +9,7 @@ class Symbol
   end
   
   def as(alias_name)
-    "#{self} as #{alias_name}"
+    "#{self} as #{alias_name}".to_sym
   end
 
 end

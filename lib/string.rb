@@ -9,7 +9,7 @@ class String
   end
   
   def as(alias_name)
-    "#{self.to_sql} as #{alias_name}"
+    "#{self.to_sql} as #{alias_name}".to_sym
   end
 
 end

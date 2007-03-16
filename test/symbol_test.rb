@@ -6,6 +6,6 @@ class SymbolTest < Test::Unit::TestCase
   end
   
   def test_as
-    assert_equal 'asdf as bam', :asdf.as(:bam)
+    assert_equal :'asdf as bam', :asdf.as(:bam)
   end
 end

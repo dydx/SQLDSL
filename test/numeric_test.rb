@@ -6,6 +6,6 @@ class NumbericTest < Test::Unit::TestCase
   end
   
   def test_as
-    assert_equal '1 as bam', 1.as(:bam)
+    assert_equal :'1 as bam', 1.as(:bam)
   end
 end

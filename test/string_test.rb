@@ -10,6 +10,6 @@ class StringTest < Test::Unit::TestCase
   end
   
   def test_as
-    assert_equal "'foo' as bar", "foo".as(:bar)
+    assert_equal :"'foo' as bar", "foo".as(:bar)
   end
 end
