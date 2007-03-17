@@ -68,4 +68,24 @@ class Select < SqlStatement
     self
   end
   
+  def inner_join
+    InnerJoinBuilder.new(self)
+  end
+  
+  def inner_join_table(table_name)
+    @to_sql << " inner join "
+    if table_name.to_s =~ / as /
+      @tables << table_name.to_s.split(/ as /).last.to_sym
+      @to_sql << table_name.to_s.gsub(/ as /, " ").to_sym
+    else
+      @tables << table_name
+      @to_sql << table_name.to_s
+    end
+    self
+  end
+  
+  def on(&block)
+    @to_sql += OnWhereBuilder.new(self.tables, &block).to_sql
+    self
+  end
 end

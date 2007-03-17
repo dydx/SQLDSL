@@ -8,6 +8,11 @@ class Symbol
     to_s
   end
   
+  # call-seq: symbol.as(alias_name) -> a_symbol
+  # 
+  # Returns the symbol aliased (including 'as') as the aliased name
+  # 
+  #    :book.as(:category)     #=> :"book as category"
   def as(alias_name)
     "#{self} as #{alias_name}".to_sym
   end

@@ -8,6 +8,11 @@ class String
     "'#{self.gsub(/'/, "''")}'"
   end
   
+  # call-seq: string.as(alias_name) -> a_symbol
+  # 
+  # Returns the string aliased (including 'as') as the aliased name
+  # 
+  #    "book".as(:category)     #=> :"'book' as category"
   def as(alias_name)
     "#{self.to_sql} as #{alias_name}".to_sym
   end
