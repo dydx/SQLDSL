@@ -1,4 +1,4 @@
-class InnerJoinBuilder
+class InnerJoinBuilder #:nodoc:
   def initialize(select_builder)
     @select_builder = select_builder
   end

@@ -68,11 +68,17 @@ class Select < SqlStatement
     self
   end
   
+  # call-seq: select.inner_join -> an_inner_join_builder
+  # 
+  # Returns an InnerJoinBuilder instance.
+  # 
+  #    Select.all.from[:table1].inner_join
+  #      #=> #<InnerJoinBuilder:0x654f4 @select_builder=#<Select:0x65968 @tables=[:table1], @to_sql="select * from table1">>
   def inner_join
     InnerJoinBuilder.new(self)
   end
   
-  def inner_join_table(table_name)
+  def inner_join_table(table_name) #:nodoc:
     @to_sql << " inner join "
     if table_name.to_s =~ / as /
       @tables << table_name.to_s.split(/ as /).last.to_sym
@@ -84,6 +90,14 @@ class Select < SqlStatement
     self
   end
   
+  # call-seq: sql_statement.on { block } -> a_sql_statement
+  # 
+  # Creates a new OnWhereBuilder instance, passing the block as a parameter, then executes to_sql on the OnWhereBuilder instance.
+  # The resulting string from the OnWhereBuilder instance is appended to the SQL statement.
+  # Returns self.
+  # 
+  #    Select.all.from[:table1].inner_join[:table2].on { equal :table1.column1, :table2.column1 }.to_sql
+  #      #=> "select * from table1 inner join table2 on table1.column1 = table2.column2"
   def on(&block)
     @to_sql += OnWhereBuilder.new(self.tables, &block).to_sql
     self
