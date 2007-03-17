@@ -71,6 +71,19 @@ class SelectAcceptanceTest < Test::Unit::TestCase
     assert_equal expected, statement.to_sql
   end
   
+  def test_select_with_inner_join
+    expected = "select * from t1 a inner join t2 b on a.id = b.id inner join t3 c on b.id2 = c.id where c.attr1 = 'foo' and b.attr1 = 'foo2'"
+    statement = Select.all.from[:t1.as(:a)].inner_join[:t2.as(:b)].on do
+      a.id = b.id
+    end.inner_join[:t3.as(:c)].on do
+      b.id2 = c.id
+    end.where do
+      c.attr1 = 'foo'
+      b.attr1 = 'foo2'
+    end
+    assert_equal expected, statement.to_sql
+  end
+  
   def test_columns_in_inner_where_are_validated_against_outer_tables
     statement = Select.all.from[:table].where do
       exists(Select.all.from[:inner_table.as(:aliased)].where do

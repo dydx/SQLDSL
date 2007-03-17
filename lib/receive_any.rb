@@ -1,4 +1,4 @@
-class ReceiveAny  #:nodoc:
+class ReceiveAny < BlankSlate #:nodoc:
   attr_reader :to_sql, :builder
   
   def initialize(identifier, builder)

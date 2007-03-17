@@ -76,7 +76,7 @@ class Select < SqlStatement
     @to_sql << " inner join "
     if table_name.to_s =~ / as /
       @tables << table_name.to_s.split(/ as /).last.to_sym
-      @to_sql << table_name.to_s.gsub(/ as /, " ").to_sym
+      @to_sql << table_name.to_s.gsub(/ as /, " ")
     else
       @tables << table_name
       @to_sql << table_name.to_s
