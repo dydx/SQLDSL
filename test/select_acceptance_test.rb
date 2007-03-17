@@ -25,7 +25,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
   
   def test_select_with_receive_any_objects_and_operators
     statement = Select[:column1, 'book', 10].from[:table1, :table2].where do
-      table1.column1 = 99
+      column1 == 99
       column1 <=> 100
       column2 < 'foo'
       column3 <= column4
@@ -36,7 +36,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
       column2 << [3, 4]
     end
     expected = "select column1, 'book', 10 from table1, table2
-                  where table1.column1 = 99 and column1 <> 100 and column2 < 'foo' 
+                  where column1 = 99 and column1 <> 100 and column2 < 'foo' 
                   and column3 <= column4 and column1 > 0 and column2 >= 'bar' 
                   and column1 is not null and column1 in (1, 2) and column2 not in (3, 4)"
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
@@ -74,12 +74,12 @@ class SelectAcceptanceTest < Test::Unit::TestCase
   def test_select_with_inner_join
     expected = "select * from t1 a inner join t2 b on a.id = b.id inner join t3 c on b.id2 = c.id where c.attr1 = 'foo' and b.attr1 = 'foo2'"
     statement = Select.all.from[:t1.as(:a)].inner_join[:t2.as(:b)].on do
-      a.id = b.id
+      a.id == b.id
     end.inner_join[:t3.as(:c)].on do
-      b.id2 = c.id
+      b.id2 == c.id
     end.where do
-      c.attr1 = 'foo'
-      b.attr1 = 'foo2'
+      c.attr1 == 'foo'
+      b.attr1 == 'foo2'
     end
     assert_equal expected, statement.to_sql
   end
@@ -87,7 +87,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
   def test_columns_in_inner_where_are_validated_against_outer_tables
     statement = Select.all.from[:table].where do
       exists(Select.all.from[:inner_table.as(:aliased)].where do
-        table.column1 = aliased.column1
+        table.column1 == aliased.column1
       end)
     end
     assert_equal 'select * from table where exists (select * from inner_table aliased where table.column1 = aliased.column1)', statement.to_sql

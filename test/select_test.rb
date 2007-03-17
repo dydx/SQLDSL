@@ -68,7 +68,7 @@ class SelectTest < Test::Unit::TestCase
 
   def test_inner_join_with_table_with_on
     statement = Select.all.from[:table1].inner_join[:table2].on do
-      table2.column = 1
+      table2.column == 1
     end
     assert_equal "select * from table1 inner join table2 on table2.column = 1", statement.to_sql
   end

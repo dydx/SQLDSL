@@ -9,6 +9,7 @@ class ReceiveAny < BlankSlate #:nodoc:
   def equal(arg)
     builder.equal self, arg
   end
+  alias == equal
   
   def not_equal(arg)
     builder.not_equal self, arg
@@ -52,8 +53,7 @@ class ReceiveAny < BlankSlate #:nodoc:
   
   def method_missing(sym, *args)
     raise ArgumentError.new("#{self.to_sql} is not specified as a table in your from statement") unless @builder.tables.include?(self.to_sql.to_sym)
-    @to_sql << ".#{sym.to_s}".chomp("=")
-    self.equal args.first if sym.to_s =~ /=$/
+    @to_sql << ".#{sym.to_s}"
     self
   end
 end

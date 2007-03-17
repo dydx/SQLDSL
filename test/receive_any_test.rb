@@ -27,8 +27,7 @@ class ReceiveAnyTest < Test::Unit::TestCase
     builder.expects(:equal).with do |lval, rval|
       lval.class == ReceiveAny && rval == 1
     end
-    builder.expects(:tables).returns [:foo]
-    ReceiveAny.new(:foo, builder).bar = 1
+    ReceiveAny.new(:foo, builder) == 1
   end
   
   def test_not_equal
