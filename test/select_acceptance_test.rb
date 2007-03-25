@@ -69,8 +69,10 @@ class SelectAcceptanceTest < Test::Unit::TestCase
       column1.equal 0
     end.or do
       column1 > 100
+    end.and do
+      column2 == 15
     end
-    expected = "select column1, 'book', 10 from table1, table2 where column1 = 0 or (column1 > 100)"
+    expected = "select column1, 'book', 10 from table1, table2 where column1 = 0 or (column1 > 100) and (column2 = 15)"
     assert_equal expected, statement.to_sql
   end
   
