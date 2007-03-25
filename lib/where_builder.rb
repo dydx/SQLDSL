@@ -94,6 +94,11 @@ class WhereBuilder
     sql_parts << "#{column.to_sql} is not null"
   end
   
+  # call-seq: where.like(arg1, arg2)
+  # 
+  # Appends a like condition to the where SQL clause.
+  # 
+  #    where { like :column1, 'any' }.to_sql       #=> " where column1 like 'any'"
   def like(lval, rval)
     add_condition(lval, "like", rval)
   end
