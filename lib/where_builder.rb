@@ -93,6 +93,10 @@ class WhereBuilder
   def is_not_null(column)
     sql_parts << "#{column.to_sql} is not null"
   end
+  
+  def like(lval, rval)
+    add_condition(lval, "like", rval)
+  end
     
   # call-seq: where.exists(clause)
   # 

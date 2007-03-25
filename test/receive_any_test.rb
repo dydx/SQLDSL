@@ -157,4 +157,20 @@ class ReceiveAnyTest < Test::Unit::TestCase
     end
     ReceiveAny.new(:foo, builder) ^ nil
   end
+  
+  def test_like
+    builder = mock
+    builder.expects(:like).with do |lval, rval|
+      lval.class == ReceiveAny && rval == "any"
+    end
+    ReceiveAny.new(:foo, builder).like "any"
+  end
+
+  def test_like
+    builder = mock
+    builder.expects(:like).with do |lval, rval|
+      lval.class == ReceiveAny && rval == "any"
+    end
+    ReceiveAny.new(:foo, builder) =~ "any"
+  end
 end

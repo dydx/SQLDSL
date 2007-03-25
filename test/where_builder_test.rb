@@ -51,6 +51,13 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal " where column1 in (1, 2)", statement.to_sql
   end
 
+  def test_like
+    statement = WhereBuilder.new [] do
+      like :column1, "any"
+    end
+    assert_equal " where column1 like 'any'", statement.to_sql
+  end
+
   def test_is_not_in_where_criteria
     statement = WhereBuilder.new [] do
       is_not_in :column1, [1,2]

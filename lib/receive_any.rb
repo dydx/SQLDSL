@@ -45,6 +45,11 @@ class ReceiveAny < BlankSlate #:nodoc:
     builder.is_not_in self, arg
   end
   alias << is_not_in
+
+  def like(arg)
+    builder.like self, arg
+  end
+  alias =~ like
   
   def is_not_null(arg=nil)
     builder.is_not_null self

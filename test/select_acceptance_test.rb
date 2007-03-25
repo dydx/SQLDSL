@@ -9,6 +9,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
       less_than_or_equal :column3, :column4
       greater_than :column1, 0
       greater_than_or_equal :column2, 'bar'
+      like :column1, 'any'
       is_not_null :column1
       is_in :column1, [1,2]
       is_not_in :column2, [3, 4]
@@ -17,7 +18,7 @@ class SelectAcceptanceTest < Test::Unit::TestCase
     end
     expected = "select column1, 'book', 10 from table1, table2
                   where column1 = 99 and column1 <> 100 and column2 < 'foo' 
-                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' 
+                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' and column1 like 'any' 
                   and column1 is not null and column1 in (1, 2) and column2 not in (3, 4) 
                   and exists (0) and not exists (0)"
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
@@ -31,13 +32,14 @@ class SelectAcceptanceTest < Test::Unit::TestCase
       column3 <= column4
       column1 > 0
       column2 >= 'bar'
+      column1 =~ 'any'
       column1 ^ nil
       column1 >> [1,2]
       column2 << [3, 4]
     end
     expected = "select column1, 'book', 10 from table1, table2
                   where column1 = 99 and column1 <> 100 and column2 < 'foo' 
-                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' 
+                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' and column1 like 'any'
                   and column1 is not null and column1 in (1, 2) and column2 not in (3, 4)"
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
   end
@@ -50,13 +52,14 @@ class SelectAcceptanceTest < Test::Unit::TestCase
       column3.less_than_or_equal column4
       column1.greater_than 0
       column2.greater_than_or_equal 'bar'
+      column1.like 'any'
       column1.is_not_null
       column1.is_in [1,2]
       column2.is_not_in [3, 4]
     end
     expected = "select column1, 'book', 10 from table1, table2
                   where column1 = 99 and column1 <> 100 and column2 < 'foo' 
-                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' 
+                  and column3 <= column4 and column1 > 0 and column2 >= 'bar' and column1 like 'any'
                   and column1 is not null and column1 in (1, 2) and column2 not in (3, 4)"
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
   end
