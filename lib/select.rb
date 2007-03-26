@@ -78,15 +78,18 @@ class Select < SqlStatement
     InnerJoinBuilder.new(self)
   end
   
-  def inner_join_table(table_name) #:nodoc:
+  def inner_join_table(*table_names) #:nodoc:
     @to_sql << " inner join "
-    if table_name.to_s =~ / as /
-      @tables << table_name.to_s.split(/ as /).last.to_sym
-      @to_sql << table_name.to_s.gsub(/ as /, " ")
-    else
-      @tables << table_name
-      @to_sql << table_name.to_s
-    end
+    table_names.flatten!
+    @to_sql += table_names.inject([]) do |result, element|
+      if element.to_s =~ / as /
+        @tables << element.to_s.split(/ as /).last.to_sym
+        result << element.to_s.gsub(/ as /, " ").to_sym
+      else
+        @tables << element
+        result << element
+      end
+    end.to_sql
     self
   end
   

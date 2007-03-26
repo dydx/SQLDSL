@@ -77,10 +77,9 @@ class SelectAcceptanceTest < Test::Unit::TestCase
   end
   
   def test_select_with_inner_join
-    expected = "select * from t1 a inner join t2 b on a.id = b.id inner join t3 c on b.id2 = c.id where c.attr1 = 'foo' and b.attr1 = 'foo2'"
-    statement = Select.all.from[:t1.as(:a)].inner_join[:t2.as(:b)].on do
+    expected = "select * from t1 a inner join t2 b, t3 c on a.id = b.id and b.id2 = c.id where c.attr1 = 'foo' and b.attr1 = 'foo2'"
+    statement = Select.all.from[:t1.as(:a)].inner_join[:t2.as(:b), :t3.as(:c)].on do
       a.id == b.id
-    end.inner_join[:t3.as(:c)].on do
       b.id2 == c.id
     end.where do
       c.attr1 == 'foo'

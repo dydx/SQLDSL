@@ -3,7 +3,7 @@ class InnerJoinBuilder #:nodoc:
     @select_builder = select_builder
   end
   
-  def [](table_name)
-    @select_builder.inner_join_table(table_name)
+  def [](*table_names)
+    @select_builder.inner_join_table(table_names)
   end
 end

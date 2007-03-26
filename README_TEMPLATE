@@ -2,7 +2,7 @@
 
 SQL DSL is a library for creating SQL statements using ruby code.
 
-by Jay[http://jayfields.blogspot.com] Fields[http://jayfields.blogspot.com]
+by Jay[http://blog.jayfields.com] Fields[http://blog.jayfields.com]
 
 == Download and Installation
 
@@ -39,4 +39,6 @@ See the tests for more examples
 <%= File.readlines("test/select_acceptance_test.rb").collect { |line| "    " + line } %>
 
 === Contributors
-Matt Deiters
+Matt[http://www.theagiledeveloper.com] Deiters[http://www.theagiledeveloper.com]
+
+Sergio[http://spejman-on-rails.blogspot.com/] Espeja[http://spejman-on-rails.blogspot.com/]
