@@ -68,18 +68,39 @@ class Select < SqlStatement
     self
   end
   
-  # call-seq: select.inner_join -> an_inner_join_builder
+  # call-seq: select.inner_join -> a_join_builder
   # 
-  # Returns an InnerJoinBuilder instance.
+  # Returns a JoinBuilder instance.
   # 
   #    Select.all.from[:table1].inner_join
-  #      #=> #<InnerJoinBuilder:0x654f4 @select_builder=#<Select:0x65968 @tables=[:table1], @to_sql="select * from table1">>
+  #      #=> #<JoinBuilder:0x654f4 @select_builder=#<Select:0x65968 @tables=[:table1], @to_sql="select * from table1">>
   def inner_join
-    InnerJoinBuilder.new(self)
+    JoinBuilder.new(self, "inner")
   end
   
-  def inner_join_table(*table_names) #:nodoc:
-    @to_sql << " inner join "
+  # call-seq: select.left_join -> a_join_builder
+  # 
+  # Returns a JoinBuilder instance.
+  # 
+  #    Select.all.from[:table1].left_join
+  #      #=> #<JoinBuilder:0x654f4 @select_builder=#<Select:0x65968 @tables=[:table1], @to_sql="select * from table1">>
+  def left_join
+    JoinBuilder.new(self, "left")
+  end
+  
+  # call-seq: select.right_join -> a_join_builder
+  # 
+  # Returns a JoinBuilder instance.
+  # 
+  #    Select.all.from[:table1].right_join
+  #      #=> #<JoinBuilder:0x654f4 @select_builder=#<Select:0x65968 @tables=[:table1], @to_sql="select * from table1">>
+  def right_join
+    JoinBuilder.new(self, "right")
+  end
+  
+  def join_table(join_type, table_names) #:nodoc:
+    
+    @to_sql << " #{join_type} join "
     table_names.flatten!
     @to_sql += table_names.inject([]) do |result, element|
       if element.to_s =~ / as /
@@ -92,7 +113,6 @@ class Select < SqlStatement
     end.to_sql
     self
   end
-  
   # call-seq: sql_statement.on { block } -> a_sql_statement
   # 
   # Creates a new OnWhereBuilder instance, passing the block as a parameter, then executes to_sql on the OnWhereBuilder instance.

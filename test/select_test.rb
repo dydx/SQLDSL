@@ -58,10 +58,14 @@ class SelectTest < Test::Unit::TestCase
     assert_equal [:table1, :table2], Select.all.from[:table1, :table2].instance_variable_get("@tables")
   end
 
-  def test_inner_join
-    assert_equal InnerJoinBuilder, Select.all.inner_join.class
+  def test_left_join_with_table
+    assert_equal "select * from table1 left join table2", Select.all.from[:table1].left_join[:table2].to_sql
   end
-  
+
+  def test_right_join_with_table
+    assert_equal "select * from table1 right join table2", Select.all.from[:table1].right_join[:table2].to_sql
+  end
+
   def test_inner_join_with_table
     assert_equal "select * from table1 inner join table2", Select.all.from[:table1].inner_join[:table2].to_sql
   end
