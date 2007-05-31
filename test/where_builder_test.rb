@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 class WhereBuilderTest < Test::Unit::TestCase
-  
+
   def test_condition_calls_to_sql
     lval, rval = mock, mock
     lval.expects(:to_sql).returns "lval"
@@ -10,7 +10,7 @@ class WhereBuilderTest < Test::Unit::TestCase
     where.add_condition(lval, "op", rval)
     assert_equal "lval op rval", where.send(:sql_parts).first
   end
-  
+
   def test_parenthesis_condition_calls_to_sql
     lval, rval = mock, mock
     lval.expects(:to_sql).returns "lval"
@@ -19,24 +19,24 @@ class WhereBuilderTest < Test::Unit::TestCase
     where.add_parenthesis_condition(lval, "op", rval)
     assert_equal "lval op (rval)", where.send(:sql_parts).first
   end
-  
+
   def test_method_missing_for_receive_any_creation
     assert_equal ReceiveAny, WhereBuilder.new([], &lambda {}).missing_method.class
   end
-  
+
   def test_method_missing_when_method_call_is_likely_a_mistake
     assert_raises NoMethodError do
       WhereBuilder.new([], &lambda {}).missing_method(:with_args)
     end
   end
-  
+
   def test_equal
     statement = WhereBuilder.new [] do
       equal :column1, :column2
     end
     assert_equal ' where column1 = column2', statement.to_sql
   end
-  
+
   def test_not_equal
     statement = WhereBuilder.new [] do
       not_equal :column1, :column2
@@ -58,6 +58,13 @@ class WhereBuilderTest < Test::Unit::TestCase
     assert_equal " where column1 like 'any'", statement.to_sql
   end
 
+  def test_add_params
+    statement = WhereBuilder.new [] do
+      like :column1, "any"
+    end
+    assert_equal " where column1 like 'any' and (c2 = 'foo' or c3 = :bar)", statement.to_sql
+  end
+
   def test_is_not_in_where_criteria
     statement = WhereBuilder.new [] do
       is_not_in :column1, [1,2]
@@ -71,7 +78,7 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal " where column1 < column2", statement.to_sql
   end
-  
+
   def test_less_than_or_equal
     statement = WhereBuilder.new [] do
       less_than_or_equal :column1, :column2
@@ -85,14 +92,14 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal " where column1 > column2", statement.to_sql
   end
-  
+
   def test_greater_than_or_equal
     statement = WhereBuilder.new [] do
       greater_than_or_equal :column1, :column2
     end
     assert_equal " where column1 >= column2", statement.to_sql
   end
-  
+
   def test_where_clause_is_built_with_multiple_conditions
     statement = WhereBuilder.new [] do
       equal :column1, :column2
@@ -101,21 +108,21 @@ class WhereBuilderTest < Test::Unit::TestCase
     expected = " where column1 = column2 and column3 = column5"
     assert_equal expected, statement.to_sql
   end
-  
+
   def test_exists_evaluates_sql_statement_argument
     statement = WhereBuilder.new [] do
       exists Struct.new(:to_sql).new('select foo')
     end
     assert_equal ' where exists (select foo)', statement.to_sql
   end
-  
+
   def test_not_exists_evaluates_sql_statement_argument
     statement = WhereBuilder.new [] do
       not_exists Struct.new(:to_sql).new('select foo')
     end
     assert_equal ' where not exists (select foo)', statement.to_sql
   end
-  
+
   def test_is_not_null_where_criteria
     statement = WhereBuilder.new [] do
       is_not_null Struct.new(:to_sql).new('something')
