@@ -27,7 +27,7 @@ Gem::manage_gems
 specification = Gem::Specification.new do |s|
 	s.name   = "sqldsl"
   s.summary = "A DSL for creating SQL Statements"
-	s.version = "1.4.4"
+	s.version = "1.4.6"
 	s.author = 'Jay Fields'
 	s.description = "A DSL for creating SQL Statements"
 	s.email = 'sqldsl-developer@rubyforge.org'

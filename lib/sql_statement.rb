@@ -42,4 +42,18 @@ class SqlStatement
     self
   end
   
+  # call-seq: sql_statement.and_with_or_conditions { block } -> a_sql_statement
+  # 
+  # Creates a new AndWithOrConditionsWhereBuilder instance, passing the block as a parameter, 
+  # then executes to_sql on the AndWithOrConditionsWhereBuilder instance.
+  # The resulting string from the AndWithOrConditionsWhereBuilder instance is appended to the SQL statement.
+  # Returns self.
+  # 
+  #    Select[1].where { equal :column1, 1 }.and_with_or_conditions { equal :column2, 100 }.to_sql       
+  #      #=> "select 1 where column1 = 1 and (column2 = 100)"
+  def and_with_or_conditions(&block)
+    @to_sql += AndWithOrConditionsWhereBuilder.new(self.tables, &block).to_sql
+    self
+  end
+  
 end
