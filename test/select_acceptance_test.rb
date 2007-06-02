@@ -64,14 +64,12 @@ class SelectAcceptanceTest < Test::Unit::TestCase
     assert_equal expected.delete("\n").squeeze(" "), statement.to_sql
   end
   
-  def test_add_params
+  def test_add_clause
     statement = Select[:column1].from[:table1].where do
       like :column1, "any"
-    end.and_with_or_conditions do
-      c2 == 'foo'
-      c3 == :bar
+      add_clause "(c2 = 'foo')"
     end
-    assert_equal "select column1 from table1 where column1 like 'any' and (c2 = 'foo' or c3 = bar)", statement.to_sql
+    assert_equal "select column1 from table1 where column1 like 'any' and (c2 = 'foo')", statement.to_sql
   end
   
   

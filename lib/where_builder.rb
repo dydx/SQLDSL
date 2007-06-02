@@ -133,6 +133,15 @@ class WhereBuilder
     " where #{sql_parts.join(' and ')}"
   end
   
+  # call-seq: where.add_clause(clause)
+  # 
+  # Appends a text clause to the where SQL clause.
+  # 
+  #    where { add_clause '(any string)' }.to_sql       #=> " where (any string)"
+  def add_clause(arg)
+    sql_parts << arg
+  end
+  
   def add_condition(lval, operator, rval) #:nodoc:
     sql_parts << "#{lval.to_sql} #{operator} #{rval.to_sql}"
   end
