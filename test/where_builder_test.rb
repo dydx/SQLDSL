@@ -122,4 +122,11 @@ class WhereBuilderTest < Test::Unit::TestCase
     end
     assert_equal ' where something is not null', statement.to_sql
   end
+
+  def test_is_not_null_where_criteria_where_criteria
+    statement = WhereBuilder.new [] do
+      is_null Struct.new(:to_sql).new('something')
+    end
+    assert_equal ' where something is null', statement.to_sql
+  end
 end

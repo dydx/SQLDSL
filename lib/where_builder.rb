@@ -93,7 +93,16 @@ class WhereBuilder
   def is_not_null(column)
     sql_parts << "#{column.to_sql} is not null"
   end
-  
+
+  # call-seq: where.is_null(arg1)
+  #
+  # Appends an is null condition to the where SQL clause.
+  #
+  #    where { is_null :column1 }.to_sql       #=> " where column1 is null"
+  def is_null(column)
+    sql_parts << "#{column.to_sql} is null"
+  end
+
   # call-seq: where.like(arg1, arg2)
   # 
   # Appends a like condition to the where SQL clause.
